@@ -16,8 +16,8 @@ readme = "README.md"
 bevy = "0.12"
 tiled = "0.11"
 bevy_ecs_tilemap = {git= "https://github.com/divark/bevy_ecs_tilemap", branch = "0.12-fixes"}
-thiserror = "1.0.50"
-serde = {version = "1.0.192", features = ["derive"]}
+thiserror = "^1.0.50"
+serde = {version = "1.0", features = ["derive"]}
 ron = "0.8"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]

@@ -32,6 +32,12 @@ Custom properties added to the layer or the map itself would be added in the sam
 Debug rendering of Objects placement can be enabled by adding `TiledBlueprintsDebugDisplayPlugin` plugin to the application.
 There is example in `examples/simple.rs`. 
 
+## ToDo
+
+- parse different object shapes, for now it just takes `x` and `y` pos and turns that into `Tranform` components
+- make example with support for collisions from `bevy_rapier` for example
+- update `Cargo.toml` so it use package from crates.io instead of github branch- blocked until [bevy_ecs_tilemap](https://github.com/StarArawn/bevy_ecs_tilemap) gets update
+
 ---
 
 Big thanks to the authors of [bevy_ecs_tilemap](https://github.com/StarArawn/bevy_ecs_tilemap), this whole thing is based on expanding the tiled example from there.
