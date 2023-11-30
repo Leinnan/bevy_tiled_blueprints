@@ -20,6 +20,10 @@ pub struct ExampleComponent;
 #[reflect(Component)]
 pub struct ExampleComponentWithInt(pub i32);
 
+#[derive(Debug, Reflect, Component, Default, Clone)]
+#[reflect(Component)]
+pub struct ExampleBoolComponent(pub bool);
+
 #[derive(Debug, Reflect, Component, Default, Clone, Serialize)]
 #[reflect(Component)]
 pub struct ComplexType {
@@ -34,6 +38,7 @@ fn main() {
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .register_type::<ExampleComponent>()
         .register_type::<ExampleComponentWithInt>()
+        .register_type::<ExampleBoolComponent>()
         .register_type::<ComplexType>()
         .add_plugins(bevy_tiled_blueprints::prelude::bevy_ecs_tilemap::TilemapPlugin)
         .add_plugins(bevy_tiled_blueprints::prelude::TiledBlueprintsPlugin)

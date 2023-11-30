@@ -53,6 +53,9 @@
   <object id="15" name="FirstName" x="400" y="472">
    <properties>
     <property name="ComplexType" value="(name:&quot;ExampleName&quot;,strength:13,dexterity:37.0)"/>
+    <property name="CustomComponent" value=""/>
+    <property name="ExampleBoolComponent" type="bool" value="true"/>
+    <property name="ExampleComponentWithInt" type="int" value="51"/>
    </properties>
    <point/>
   </object>
