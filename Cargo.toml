@@ -1,0 +1,31 @@
+[package]
+name = "bevy_tiled_blueprints"
+version = "0.1.0"
+edition = "2021"
+categories = ["game-development"]
+description = "Allows reading tiled maps with properties"
+exclude = [".github/"]
+keywords = ["bevy", "tiled", "map"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/Leinnan/bevy_tiled_blueprints"
+
+
+[dependencies]
+bevy = "0.12"
+tiled = "0.11"
+bevy_ecs_tilemap = {git= "https://github.com/divark/bevy_ecs_tilemap", branch = "0.12-fixes"}
+thiserror = "1.0.50"
+serde = {version = "1.0.192", features = ["derive"]}
+ron = "0.8"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+bevy_egui = "0.23"
+bevy-inspector-egui = "0.21"
+bevy = { version = "0.12", features = [
+    "bevy_ui",
+    "bevy_asset",
+    "bevy_text",
+    "bevy_render",
+    "file_watcher",
+] }
