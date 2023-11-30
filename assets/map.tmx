@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-up" width="50" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="16">
+ <properties>
+  <property name="Visibility" value="Visible"/>
+ </properties>
  <tileset firstgid="1" name="ground" tilewidth="16" tileheight="16" tilecount="1020" columns="20">
   <image source="textures/colony-grounds-ready.png" width="320" height="816"/>
  </tileset>
@@ -53,6 +56,7 @@
   <object id="14" name="ThirdOne" x="800" y="0">
    <properties>
     <property name="ExampleComponent" value=""/>
+    <property name="remove:Parent" value=""/>
    </properties>
    <point/>
   </object>

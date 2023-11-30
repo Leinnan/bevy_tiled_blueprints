@@ -5,11 +5,11 @@ use std::sync::Arc;
 
 use bevy::core::Name;
 use bevy::ecs::query::With;
-use bevy::ecs::reflect::{AppTypeRegistry, ReflectComponent};
+use bevy::ecs::reflect::{AppTypeRegistry, ReflectCommandExt, ReflectComponent};
 use bevy::ecs::schedule::IntoSystemConfigs;
 use bevy::ecs::world::World;
 use bevy::math::Vec3;
-use bevy::reflect::Reflect;
+use bevy::reflect::{Reflect, TypeInfo};
 use bevy::{
     asset::{io::Reader, AssetLoader, AssetPath, AsyncReadExt},
     log,
@@ -26,7 +26,8 @@ pub mod debug;
 
 pub mod prelude {
     pub use super::{
-        RemoveMap, TiledBlueprintsPlugin, debug::TiledBlueprintsDebugDisplayPlugin, TiledLayersStorage, TiledMap, TiledMapBundle,
+        debug::TiledBlueprintsDebugDisplayPlugin, RemoveMap, TiledBlueprintsPlugin,
+        TiledLayersStorage, TiledMap, TiledMapBundle,
     };
     pub use bevy_ecs_tilemap;
 }
@@ -268,8 +269,13 @@ pub fn process_loaded_maps(
                     // commands.entity(*layer_entity).despawn_recursive();
                 }
 
-                add_properties(&tiled_map.map.properties, map_entity, &type_registry, &mut commands);
-                
+                add_properties(
+                    &tiled_map.map.properties,
+                    map_entity,
+                    &type_registry,
+                    &mut commands,
+                );
+
                 // The TilemapBundle requires that all tile images come exclusively from a single
                 // tiled texture or from a Vec of independent per-tile images. Furthermore, all of
                 // the per-tile images must be the same size. Since Tiled allows tiles of mixed
@@ -330,18 +336,21 @@ pub fn process_loaded_maps(
                             .set_parent(map_entity)
                             .id();
 
-                        add_properties(&layer.properties, layer_entity, &type_registry, &mut commands);
+                        add_properties(
+                            &layer.properties,
+                            layer_entity,
+                            &type_registry,
+                            &mut commands,
+                        );
 
                         if let tiled::LayerType::Objects(obj_layer) = layer.layer_type() {
                             for obj in obj_layer.objects() {
-
                                 let pos = Vec3::new(obj.x, -obj.y + layer_world_size.y, 0.0);
-                                let name = Name::new(
-                                    if obj.name.is_empty() {
-                                        "Object".to_string()
-                                    } else {
-                                        obj.name.clone()
-                                    });
+                                let name = Name::new(if obj.name.is_empty() {
+                                    "Object".to_string()
+                                } else {
+                                    obj.name.clone()
+                                });
                                 let e = commands
                                     .spawn((
                                         name,
@@ -462,6 +471,8 @@ pub fn process_loaded_maps(
     }
 }
 
+const REMOVE_PREFIX: &str = "remove:";
+
 fn add_properties(
     properties: &std::collections::HashMap<String, tiled::PropertyValue>,
     e: Entity,
@@ -470,24 +481,39 @@ fn add_properties(
 ) {
     for (k, value) in properties.iter() {
         if let Some(type_registration) = type_registry.get_with_short_type_path(k) {
+            let type_info = type_registration.type_info();
+            let type_path = type_info.type_path();
             let parsed_value = match value {
                 tiled::PropertyValue::BoolValue(b) => b.to_string(),
                 tiled::PropertyValue::FloatValue(f) => f.to_string(),
                 tiled::PropertyValue::IntValue(i) => i.to_string(),
                 tiled::PropertyValue::StringValue(s) => s.to_string(),
-                // tiled::PropertyValue::ColorValue(_) => todo!(),
+                tiled::PropertyValue::ColorValue(c) => format!(
+                    "Rgba(red:{},green:{},blue:{}, alpha:{})",
+                    c.red as f32 / 255.0,
+                    c.green as f32 / 255.0,
+                    c.blue as f32 / 255.0,
+                    c.alpha as f32 / 255.0
+                ),
                 // tiled::PropertyValue::FileValue(_) => todo!(),
                 // tiled::PropertyValue::ObjectValue(_) => todo!(),
                 _ => "".to_string(),
             }
             .trim()
             .to_string();
-            let matches = (parsed_value.starts_with('('), parsed_value.ends_with(')'));
-            let type_path = type_registration.type_info().type_path();
+
+            let matches : (bool,bool,&TypeInfo) = (parsed_value.starts_with('('), parsed_value.ends_with(')'), type_info);
 
             let ron_string = match matches {
-                (true, true) => format!("{{ \"{}\":{} }}", type_path, parsed_value),
-                (false, false) => format!("{{ \"{}\":({}) }}", type_path, parsed_value),
+                (false,false,TypeInfo::Enum(info)) =>{ 
+                    let variant = info.variant_names().iter().find(|v| v.to_lowercase().eq(&parsed_value.to_lowercase()));
+                    if variant.is_none() {
+                        log::error!("Failed to deserialize enum value {}\n Valid values: {:#?}", parsed_value, info.variant_names());
+                    }
+                    format!("{{ \"{}\":{} }}", type_path, variant.unwrap())
+                },
+                (true, true, _) => format!("{{ \"{}\":{} }}", type_path, parsed_value),
+                (false, false, _) => format!("{{ \"{}\":({}) }}", type_path, parsed_value),
                 _ => {
                     log::error!("Failed to deserialize component {}: {}", k, parsed_value);
                     continue;
@@ -499,7 +525,11 @@ fn add_properties(
             let component = reflect_deserializer
                 .deserialize(&mut deserializer)
                 .unwrap_or_else(|_| {
-                    panic!("Failed to deserialize component {}: {}", k, parsed_value)
+                    panic!(
+                        "Failed to deserialize component {}: {}",
+                        type_path,
+                        ron_string
+                    )
                 });
             let result = type_registry
                 .get(type_registration.type_id())
@@ -512,7 +542,19 @@ fn add_properties(
                 let mut entity_mut = world.entity_mut(e);
                 result.insert(&mut entity_mut, &*component);
             });
-            log::info!("Added {}", type_registration.type_info().type_path())
+            log::info!("Added {}", type_registration.type_info().type_path());
+        } else if k.starts_with(REMOVE_PREFIX) {
+            let type_registration =
+                type_registry.get_with_short_type_path(k.strip_prefix(REMOVE_PREFIX).unwrap());
+            if type_registration.is_none() {
+                log::error!("Failed to deserialize component");
+                continue;
+            }
+            let type_registration = type_registration.unwrap();
+            commands
+                .entity(e)
+                .remove_reflect(type_registration.type_info().type_path());
+            log::info!("Removed {}", type_registration.type_info().type_path());
         }
     }
 }

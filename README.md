@@ -21,7 +21,9 @@ Think like:
 Supported custom property values:
 - empty for unit-like structs without any fields
 - int/bool/float for tuple structs with one unnamed fields
-- [ron](https://github.com/ron-rs/ron) strings for regular structs  
+- [ron](https://github.com/ron-rs/ron) strings for regular structs
+- string properties for enum components
+- string properties with names with prefixes `remove:` like `remove:{NameOfComponent}` for removing components.
 
 Custom properties added to the layer or the map itself would be added in the same way to the corresponding entities.
 
