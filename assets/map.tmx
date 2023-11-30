@@ -8,7 +8,7 @@
  </tileset>
  <layer id="1" name="bg" width="50" height="30">
   <properties>
-   <property name="ExampleComponent" value=""/>
+    <property name="remove:Parent" value=""/>
   </properties>
   <data encoding="csv">
 712,712,709,709,712,709,709,712,712,712,712,712,712,712,712,712,709,709,709,709,709,709,709,712,712,712,709,709,709,709,709,709,709,709,712,712,709,712,712,712,712,712,712,712,712,712,712,712,712,712,
@@ -56,7 +56,6 @@
   <object id="14" name="ThirdOne" x="800" y="0">
    <properties>
     <property name="ExampleComponent" value=""/>
-    <property name="remove:Parent" value=""/>
    </properties>
    <point/>
   </object>
