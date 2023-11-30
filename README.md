@@ -31,4 +31,8 @@ There is example in `examples/simple.rs`.
 
 ---
 
+Big thanks to the authors of [bevy_ecs_tilemap](https://github.com/StarArawn/bevy_ecs_tilemap), this whole thing is based on expanding the tiled example from there.
+
+---
+
 Web example has issues with rendering but if you look into console you can see it works.
