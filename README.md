@@ -33,7 +33,12 @@ There is example in `examples/simple.rs`.
 ---
 
 Big thanks to the authors of [bevy_ecs_tilemap](https://github.com/StarArawn/bevy_ecs_tilemap), this whole thing is based on expanding the tiled example from there.
+Same thanks to the authors of [Blender_bevy_components_workflow](https://github.com/kaosat-dev/Blender_bevy_components_workflow).
 
 ---
 
 Web example has issues with rendering but if you look into console you can see it works.
+
+## Contributing
+
+Got some idea, feedback, question or found any bug? Feel free to open an issue at any time!
