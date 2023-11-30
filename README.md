@@ -2,13 +2,20 @@
 
 Ability to read properties from Tiled maps objects straight into Bevy Engine.
 
+
+## Install
+
 > I am waiting with release on crates.io until [this PR](https://github.com/StarArawn/bevy_ecs_tilemap/pull/489) gets merged so Cargo.toml can have dependency on specific version from crates.io instead of git branch from other repo. 
+
+```
+cargo add bevy_tiled_blueprints --git "https://github.com/Leinnan/bevy_tiled_blueprints"
+```
 
 ![simple example](simple_example.png)
 
 ![Tiled example](simple_example_tiled.png)
 
-Think like:
+## Usage
 
 | Tiled | Bevy |
 |-----|----|
