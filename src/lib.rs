@@ -249,6 +249,7 @@ pub fn process_loaded_maps(
     for new_map_handle in new_maps.iter() {
         changed_maps.push(new_map_handle.id());
     }
+    let type_registry = type_registry.read();
 
     for changed_map in changed_maps.iter() {
         for (map_handle, mut layer_storage, map_entity) in map_query.iter_mut() {
@@ -267,6 +268,8 @@ pub fn process_loaded_maps(
                     // commands.entity(*layer_entity).despawn_recursive();
                 }
 
+                add_properties(&tiled_map.map.properties, map_entity, &type_registry, &mut commands);
+                
                 // The TilemapBundle requires that all tile images come exclusively from a single
                 // tiled texture or from a Vec of independent per-tile images. Furthermore, all of
                 // the per-tile images must be the same size. Since Tiled allows tiles of mixed
@@ -326,8 +329,10 @@ pub fn process_loaded_maps(
                             .insert(TransformBundle::from_transform(center))
                             .set_parent(map_entity)
                             .id();
+
+                        add_properties(&layer.properties, layer_entity, &type_registry, &mut commands);
+
                         if let tiled::LayerType::Objects(obj_layer) = layer.layer_type() {
-                            let type_registry = type_registry.read();
                             for obj in obj_layer.objects() {
 
                                 let pos = Vec3::new(obj.x, -obj.y + layer_world_size.y, 0.0);

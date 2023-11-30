@@ -4,6 +4,9 @@
   <image source="textures/colony-grounds-ready.png" width="320" height="816"/>
  </tileset>
  <layer id="1" name="bg" width="50" height="30">
+  <properties>
+   <property name="ExampleComponent" value=""/>
+  </properties>
   <data encoding="csv">
 712,712,709,709,712,709,709,712,712,712,712,712,712,712,712,712,709,709,709,709,709,709,709,712,712,712,709,709,709,709,709,709,709,709,712,712,709,712,712,712,712,712,712,712,712,712,712,712,712,712,
 712,728,709,728,728,709,709,728,728,728,728,728,728,728,728,728,728,728,728,728,728,728,728,728,688,688,728,728,709,709,728,728,709,728,728,728,728,709,728,728,728,728,728,688,728,728,728,728,728,712,
@@ -38,6 +41,9 @@
 </data>
  </layer>
  <objectgroup id="3" name="objects">
+  <properties>
+   <property name="ExampleBoolComponent" type="bool" value="true"/>
+  </properties>
   <object id="13" name="SecondName" x="1.06581e-14" y="0">
    <properties>
     <property name="ExampleComponentWithInt" type="int" value="21"/>

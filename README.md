@@ -23,6 +23,7 @@ Supported custom property values:
 - int/bool/float for tuple structs with one unnamed fields
 - [ron](https://github.com/ron-rs/ron) strings for regular structs  
 
+Custom properties added to the layer or the map itself would be added in the same way to the corresponding entities.
 
 ## Usage
 
