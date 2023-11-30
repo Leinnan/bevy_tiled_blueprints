@@ -37,6 +37,7 @@ fn main() {
         .register_type::<ComplexType>()
         .add_plugins(bevy_tiled_blueprints::prelude::bevy_ecs_tilemap::TilemapPlugin)
         .add_plugins(bevy_tiled_blueprints::prelude::TiledBlueprintsPlugin)
+        .add_plugins(bevy_tiled_blueprints::prelude::TiledBlueprintsDebugDisplayPlugin)
         .add_systems(Startup, startup);
 
     #[cfg(not(target_arch = "wasm32"))]

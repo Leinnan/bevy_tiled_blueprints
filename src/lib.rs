@@ -22,9 +22,11 @@ use serde::de::DeserializeSeed;
 
 use thiserror::Error;
 
+pub mod debug;
+
 pub mod prelude {
     pub use super::{
-        RemoveMap, TiledBlueprintsPlugin, TiledLayersStorage, TiledMap, TiledMapBundle,
+        RemoveMap, TiledBlueprintsPlugin, debug::TiledBlueprintsDebugDisplayPlugin, TiledLayersStorage, TiledMap, TiledMapBundle,
     };
     pub use bevy_ecs_tilemap;
 }
@@ -38,19 +40,9 @@ impl Plugin for TiledBlueprintsPlugin {
             .register_type::<RemoveMap>()
             .register_type::<MapObject>()
             .register_type::<TiledLayersStorage>()
-            .add_systems(
-                Update,
-                ((process_loaded_maps, cleanup_maps).chain(), draw_objects),
-            );
+            .add_systems(Update, (process_loaded_maps, cleanup_maps).chain());
     }
 }
-
-pub const MY_ACCENT_COLOR: Color = Color::Rgba {
-    red: 0.901,
-    green: 0.4,
-    blue: 0.01,
-    alpha: 1.0,
-};
 
 #[derive(TypePath, Asset)]
 pub struct TiledMap {
@@ -337,16 +329,14 @@ pub fn process_loaded_maps(
                         if let tiled::LayerType::Objects(obj_layer) = layer.layer_type() {
                             let type_registry = type_registry.read();
                             for obj in obj_layer.objects() {
-                                // log::info!("obj pos {:#?}",obj);
+
                                 let pos = Vec3::new(obj.x, -obj.y + layer_world_size.y, 0.0);
-                                let name = Name::new(format!(
-                                    "{}",
+                                let name = Name::new(
                                     if obj.name.is_empty() {
                                         "Object".to_string()
                                     } else {
                                         obj.name.clone()
-                                    }
-                                ));
+                                    });
                                 let e = commands
                                     .spawn((
                                         name,
@@ -474,7 +464,7 @@ fn add_properties(
     commands: &mut Commands,
 ) {
     for (k, value) in properties.iter() {
-        if let Some(type_registration) = type_registry.get_with_short_type_path(&k) {
+        if let Some(type_registration) = type_registry.get_with_short_type_path(k) {
             let parsed_value = match value {
                 tiled::PropertyValue::BoolValue(b) => b.to_string(),
                 tiled::PropertyValue::FloatValue(f) => f.to_string(),
@@ -487,7 +477,7 @@ fn add_properties(
             }
             .trim()
             .to_string();
-            let matches = (parsed_value.starts_with("("), parsed_value.ends_with(")"));
+            let matches = (parsed_value.starts_with('('), parsed_value.ends_with(')'));
             let type_path = type_registration.type_info().type_path();
 
             let ron_string = match matches {
@@ -500,10 +490,12 @@ fn add_properties(
             };
 
             let mut deserializer = ron::de::Deserializer::from_str(&ron_string).unwrap();
-            let reflect_deserializer = UntypedReflectDeserializer::new(&*type_registry);
-            let component = reflect_deserializer.deserialize(&mut deserializer).expect(
-                format!("Failed to deserialize component {}: {}", k, parsed_value).as_str(),
-            );
+            let reflect_deserializer = UntypedReflectDeserializer::new(type_registry);
+            let component = reflect_deserializer
+                .deserialize(&mut deserializer)
+                .unwrap_or_else(|_| {
+                    panic!("Failed to deserialize component {}: {}", k, parsed_value)
+                });
             let result = type_registry
                 .get(type_registration.type_id())
                 .unwrap()
@@ -517,12 +509,5 @@ fn add_properties(
             });
             log::info!("Added {}", type_registration.type_info().type_path())
         }
-    }
-}
-
-fn draw_objects(mut gizmos: Gizmos, q: Query<&GlobalTransform, With<MapObject>>) {
-    for t in q.iter() {
-        let t = t.translation();
-        gizmos.circle_2d(Vec2::new(t.x, t.y), 10., MY_ACCENT_COLOR);
     }
 }
