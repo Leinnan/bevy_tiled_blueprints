@@ -4,6 +4,8 @@ Ability to read properties from Tiled maps objects straight into Bevy Engine.
 
 ![simple example](simple_example.png)
 
+![Tiled example](simple_example_tiled.png)
+
 Think like:
 
 | Tiled | Bevy |
