@@ -45,7 +45,7 @@ There is example in `examples/simple.rs`.
 - make example with support for collisions from `bevy_rapier` for example
 - update `Cargo.toml` so it use package from crates.io instead of github branch- blocked until [bevy_ecs_tilemap](https://github.com/StarArawn/bevy_ecs_tilemap) gets update
 - create workflow for using [Custom enums and classes](https://doc.mapeditor.org/en/stable/manual/custom-properties/#custom-classes) from Tiled. 
-Best case scenario- with provided relative path to Tiled project file on game build bevy feeds data about custom properties to project file.
+Best case scenario- with provided relative path to Tiled project file on game build bevy feeds data about custom properties to project file. It would also require [improvements](https://github.com/mapeditor/rs-tiled/issues/274) in tiled crate
 - support for object and file property values.
 
 ---
