@@ -1,5 +1,9 @@
 # Bevy Tiled Blueprints
 
+[![Crates.io](https://img.shields.io/crates/v/bevy_tiled_blueprints)](https://crates.io/crates/bevy_tiled_blueprints)
+[![Documentation](https://docs.rs/bevy_tiled_blueprints/badge.svg)](https://docs.rs/bevy_tiled_blueprints)
+[![MIT/Apache 2.0](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](https://github.com/bevy_tiled_blueprints/bevy_tiled_blueprints#license)
+
 Ability to read properties from Tiled maps objects straight into Bevy Engine.
 
 ## Install
@@ -32,7 +36,7 @@ Supported custom property values:
 
 Custom properties added to the layer or the map itself would be added in the same way to the corresponding entities.
 
-## Usage
+## Examples
 
 Debug rendering of Objects placement can be enabled by adding `TiledBlueprintsDebugDisplayPlugin` plugin to the application.
 There is example in `examples/simple.rs`. 
@@ -57,3 +61,7 @@ Web example has issues with rendering but if you look into console you can see i
 ## Contributing
 
 Got some idea, feedback, question or found any bug? Feel free to open an issue at any time!
+
+## License
+
+`bevy_ehttp` is dual-licensed under MIT and Apache 2.0 at your option.
