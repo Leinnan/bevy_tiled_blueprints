@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-up" width="50" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="16">
+<map version="1.10" tiledversion="1.10.2" class="ComplexType" orientation="orthogonal" renderorder="right-up" width="50" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="16">
  <properties>
   <property name="Visibility" value="Visible"/>
+  <property name="complex" type="class" propertytype="ComplexType">
+   <properties>
+    <property name="dexterity" type="float" value="512"/>
+    <property name="name" value="dfas"/>
+    <property name="strength" type="int" value="451"/>
+   </properties>
+  </property>
+  <property name="dexterity" type="float" value="14"/>
+  <property name="name" value="das"/>
+  <property name="strength" type="int" value="5"/>
  </properties>
  <tileset firstgid="1" name="ground" tilewidth="16" tileheight="16" tilecount="1020" columns="20">
   <image source="textures/colony-grounds-ready.png" width="320" height="816"/>
  </tileset>
  <layer id="1" name="bg" width="50" height="30">
   <properties>
-    <property name="remove:Parent" value=""/>
+   <property name="remove:Parent" value=""/>
   </properties>
   <data encoding="csv">
 712,712,709,709,712,709,709,712,712,712,712,712,712,712,712,712,709,709,709,709,709,709,709,712,712,712,709,709,709,709,709,709,709,709,712,712,709,712,712,712,712,712,712,712,712,712,712,712,712,712,

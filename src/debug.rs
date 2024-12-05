@@ -2,12 +2,12 @@ use bevy::prelude::*;
 
 use crate::MapObject;
 
-pub const MY_ACCENT_COLOR: Color = Color::Rgba {
+pub const MY_ACCENT_COLOR: Color = Color::LinearRgba(LinearRgba {
     red: 0.901,
     green: 0.4,
     blue: 0.01,
     alpha: 1.0,
-};
+});
 
 pub struct TiledBlueprintsDebugDisplayPlugin;
 
